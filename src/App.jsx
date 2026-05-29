@@ -5,10 +5,16 @@ const PRODUCTOS = [
   // ── Acrílicos ──
   { id: 1,  nombre: "Acrílico Cubeta", marca: "Veracril", categoria: "Acrílicos",
     variantes: [{ formato: "1000g", precio: 28000 }, { formato: "500g", precio: 16990 }] },
-  { id: 3,  nombre: "Acrílico Autocurado Trans/VR-1", marca: "Veracril", categoria: "Acrílicos",
-    variantes: [{ formato: "1000g", precio: 35990 }, { formato: "500g", precio: 19000 }, { formato: "250g", precio: 13500 }] },
-  { id: 6,  nombre: "Acrílico Termocurado Trans/VR-1", marca: "Veracril", categoria: "Acrílicos",
-    variantes: [{ formato: "1000g", precio: 36500 }, { formato: "500g", precio: 19900 }, { formato: "250g", precio: 13500 }] },
+  { id: 3, nombre: "Acrílico Autocurado", marca: "Veracril", categoria: "Acrílicos", esColor: true,
+    colores: [
+      { color: "Transparente", variantes: [{ formato: "1000g", precio: 35990 }, { formato: "500g", precio: 19000 }, { formato: "250g", precio: 13500 }] },
+      { color: "VR-1", variantes: [{ formato: "1000g", precio: 35990 }, { formato: "500g", precio: 19000 }, { formato: "250g", precio: 13500 }] },
+    ]},
+  { id: 6, nombre: "Acrílico Termocurado", marca: "Veracril", categoria: "Acrílicos", esColor: true,
+    colores: [
+      { color: "Transparente", variantes: [{ formato: "1000g", precio: 36500 }, { formato: "500g", precio: 19900 }, { formato: "250g", precio: 13500 }] },
+      { color: "VR-1", variantes: [{ formato: "1000g", precio: 36500 }, { formato: "500g", precio: 19900 }, { formato: "250g", precio: 13500 }] },
+    ]},
   { id: 9,  nombre: "Acrílico de Cubeta", marca: "Marche", categoria: "Acrílicos",
     variantes: [{ formato: "250g", precio: 8990 }] },
   { id: 10, nombre: "Acrílico de Corona Termocurado", marca: "Marche", categoria: "Acrílicos",
@@ -116,20 +122,118 @@ const inputBase = {
 
 
 
+
+// ── Tarjeta con selector de COLOR + formato ──
+const ColorVarianteCard = ({ producto, carrito, onAgregar, C, fmt }) => {
+  const [colorIdx, setColorIdx] = React.useState(0);
+  const [varIdx, setVarIdx] = React.useState(0);
+  const [cantidad, setCantidad] = React.useState(0);
+
+  const colorActual = producto.colores[colorIdx];
+  const varActual = colorActual.variantes[varIdx];
+  const key = producto.id + "_" + colorActual.color + "_" + varActual.formato;
+  const enCarrito = !!carrito[key];
+
+  const handleAgregar = () => {
+    if (cantidad === 0) return;
+    onAgregar(
+      { ...producto, id: key, nombre: producto.nombre + " " + colorActual.color, variantes: colorActual.variantes },
+      varActual,
+      cantidad
+    );
+    setCantidad(0);
+  };
+
+  const btnSel = (activo) => ({
+    padding: "5px 12px", borderRadius: 6, border: "2px solid",
+    borderColor: activo ? C.verde : C.border,
+    background: activo ? C.verdeClaro : C.white,
+    color: activo ? C.verdeOsc : C.textLight,
+    cursor: "pointer", fontSize: 12, fontWeight: 700,
+    fontFamily: "inherit", transition: "all 0.15s",
+  });
+
+  return (
+    <div style={{
+      background: "rgba(255,255,255,0.92)", borderRadius: 12, padding: 16,
+      boxShadow: "0 2px 14px rgba(0,0,0,0.08)",
+      border: "2px solid " + (enCarrito ? C.verde : C.border),
+      backdropFilter: "blur(4px)",
+      display: "flex", flexDirection: "column", gap: 10,
+    }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 11, background: C.verdeClaro, color: C.verdeOsc, padding: "3px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: 1, fontWeight: 700 }}>{producto.categoria}</span>
+        {enCarrito && <span style={{ fontSize: 11, background: C.verde, color: "white", padding: "3px 8px", borderRadius: 4, fontWeight: 700 }}>✓ Agregado</span>}
+      </div>
+
+      {/* Nombre */}
+      <div>
+        <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.35 }}>{producto.nombre}</div>
+        <div style={{ fontSize: 12, color: C.textLight }}>{producto.marca}</div>
+      </div>
+
+      {/* Selector color */}
+      <div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.negroMedio, marginBottom: 5 }}>Color:</div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {producto.colores.map((c, i) => (
+            <button key={i} onClick={() => { setColorIdx(i); setVarIdx(0); }} style={{
+              ...btnSel(colorIdx === i),
+              borderColor: colorIdx === i ? C.morado : C.borderMorado,
+              background: colorIdx === i ? C.moradoClaro : C.white,
+              color: colorIdx === i ? C.morado : C.textLight,
+            }}>{c.color}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Selector formato */}
+      <div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.negroMedio, marginBottom: 5 }}>Formato:</div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {colorActual.variantes.map((v, i) => (
+            <button key={i} onClick={() => setVarIdx(i)} style={btnSel(varIdx === i)}>{v.formato}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Precio + stepper */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+        <div style={{ fontSize: 21, fontWeight: 800, color: C.verdeOsc }}>{fmt(varActual.precio)}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 0, border: "2px solid " + C.border, borderRadius: 10, overflow: "hidden" }}>
+          <button onClick={() => setCantidad(c => Math.max(0, c - 1))} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
+          <span style={{ minWidth: 32, textAlign: "center", fontSize: 15, fontWeight: 800, color: "#111", padding: "0 4px" }}>{cantidad}</span>
+          <button onClick={() => setCantidad(c => c + 1)} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+        </div>
+      </div>
+      <button onClick={handleAgregar} disabled={cantidad === 0} style={{
+        background: cantidad === 0 ? "#ccc" : C.verde,
+        color: "white", border: "none", borderRadius: 8, padding: "10px",
+        cursor: cantidad === 0 ? "not-allowed" : "pointer",
+        fontFamily: "inherit", fontSize: 13, fontWeight: 700, width: "100%",
+      }}>
+        {cantidad === 0 ? "Selecciona cantidad" : "🛒 Agregar al carrito"}
+      </button>
+      <div style={{ height: 3, borderRadius: 2, background: "linear-gradient(90deg," + C.morado + "44," + C.moradoMedio + "99)" }} />
+    </div>
+  );
+};
+
 // ── Tarjeta con variantes de formato/precio ──
 const VarianteCard = ({ producto, carrito, onAgregar, C, fmt }) => {
   const tieneVariantes = producto.variantes.length > 1;
   const [varIdx, setVarIdx] = React.useState(0);
-  const [cantidad, setCantidad] = React.useState("1");
+  const [cantidad, setCantidad] = React.useState(0);
 
   const varActual = producto.variantes[varIdx];
   const key = producto.id + "_" + varActual.formato;
   const enCarrito = !!carrito[key];
 
   const handleAgregar = () => {
-    const cant = parseInt(cantidad) || 1;
-    onAgregar(producto, varActual, cant);
-    setCantidad("1");
+    if (cantidad === 0) return;
+    onAgregar(producto, varActual, cantidad);
+    setCantidad(0);
   };
 
   return (
@@ -174,22 +278,32 @@ const VarianteCard = ({ producto, carrito, onAgregar, C, fmt }) => {
         <div style={{ fontSize: 12, color: C.textLight }}>{varActual.formato}</div>
       )}
 
-      {/* Precio + agregar */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* Precio + stepper */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
         <div style={{ fontSize: 21, fontWeight: 800, color: C.verdeOsc }}>{fmt(varActual.precio)}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <input
-            type="number" min="1" value={cantidad}
-            onChange={e => setCantidad(e.target.value)}
-            onBlur={e => { if (!e.target.value || parseInt(e.target.value) < 1) setCantidad("1"); }}
-            style={{ width: 48, padding: "7px 4px", borderRadius: 7, border: "2px solid " + C.border, textAlign: "center", fontFamily: "inherit", fontSize: 14, outline: "none", background: C.verdePale }}
-          />
-          <button onClick={handleAgregar} style={{
-            background: C.verde, color: "white", border: "none", borderRadius: 8,
-            padding: "9px 14px", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: 700,
-          }}>+ Agregar</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 0, border: "2px solid " + C.border, borderRadius: 10, overflow: "hidden" }}>
+          <button onClick={() => setCantidad(c => Math.max(0, c - 1))} style={{
+            width: 36, height: 36, border: "none", background: C.verdePale,
+            cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#222",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>−</button>
+          <span style={{ minWidth: 32, textAlign: "center", fontSize: 15, fontWeight: 800, color: "#111", padding: "0 4px" }}>{cantidad}</span>
+          <button onClick={() => setCantidad(c => c + 1)} style={{
+            width: 36, height: 36, border: "none", background: C.verdePale,
+            cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#222",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>+</button>
         </div>
       </div>
+      <button onClick={handleAgregar} disabled={cantidad === 0} style={{
+        background: cantidad === 0 ? "#ccc" : C.verde,
+        color: "white", border: "none", borderRadius: 8,
+        padding: "10px", cursor: cantidad === 0 ? "not-allowed" : "pointer",
+        fontFamily: "inherit", fontSize: 13, fontWeight: 700, width: "100%",
+        transition: "background 0.2s",
+      }}>
+        {cantidad === 0 ? "Selecciona cantidad" : "🛒 Agregar al carrito"}
+      </button>
       <div style={{ height: 3, borderRadius: 2, background: "linear-gradient(90deg," + C.morado + "44," + C.moradoMedio + "99)" }} />
     </div>
   );
@@ -200,18 +314,18 @@ const DienteCard = ({ producto, onAgregar, C, fmt }) => {
   const [tipo, setTipo] = React.useState("");
   const [modelo, setModelo] = React.useState("");
   const [color, setColor] = React.useState("");
-  const [cantidad, setCantidad] = React.useState("1");
+  const [cantidad, setCantidad] = React.useState(0);
   const [error, setError] = React.useState("");
 
   const modelos = tipo ? DIENTES_CONFIG[tipo] : [];
 
   const handleAgregar = () => {
     if (!tipo || !modelo || !color) { setError("Selecciona tipo, modelo y color"); return; }
+    if (cantidad === 0) { setError("Agrega al menos 1"); return; }
     setError("");
-    const cant = parseInt(cantidad) || 1;
     const key = tipo + "|" + modelo + "|" + color;
-    onAgregar({ ...producto, id: 49 + "_" + key, nombre: "Diente " + tipo + " Mod." + modelo, formato: "Color " + color, cantidad: cant, precio: producto.variantes[0].precio });
-    setTipo(""); setModelo(""); setColor(""); setCantidad("1");
+    onAgregar({ ...producto, id: 49 + "_" + key, nombre: "Diente " + tipo + " Mod." + modelo, formato: "Color " + color, cantidad, precio: producto.variantes[0].precio });
+    setTipo(""); setModelo(""); setColor(""); setCantidad(0);
   };
 
   const selStyle = (active) => ({
@@ -281,21 +395,22 @@ const DienteCard = ({ producto, onAgregar, C, fmt }) => {
 
       {error && <div style={{ fontSize: 12, color: "#e74c3c", fontWeight: 600 }}>⚠ {error}</div>}
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
         <div style={{ fontSize: 21, fontWeight: 800, color: C.verdeOsc }}>{fmt(producto.variantes[0].precio)}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <input
-            type="number" min="1" value={cantidad}
-            onChange={e => setCantidad(e.target.value)}
-            onBlur={e => { if (!e.target.value || parseInt(e.target.value) < 1) setCantidad("1"); }}
-            style={{ width: 48, padding: "7px 4px", borderRadius: 7, border: "2px solid " + C.border, textAlign: "center", fontFamily: "inherit", fontSize: 14, outline: "none", background: C.verdePale }}
-          />
-          <button onClick={handleAgregar} style={{
-            background: C.verde, color: "white", border: "none", borderRadius: 8,
-            padding: "9px 14px", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: 700,
-          }}>+ Agregar</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 0, border: "2px solid " + C.border, borderRadius: 10, overflow: "hidden" }}>
+          <button onClick={() => setCantidad(c => Math.max(0, c - 1))} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
+          <span style={{ minWidth: 32, textAlign: "center", fontSize: 15, fontWeight: 800, color: "#111", padding: "0 4px" }}>{cantidad}</span>
+          <button onClick={() => setCantidad(c => c + 1)} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
         </div>
       </div>
+      <button onClick={handleAgregar} disabled={cantidad === 0} style={{
+        background: cantidad === 0 ? "#ccc" : C.verde,
+        color: "white", border: "none", borderRadius: 8, padding: "10px",
+        cursor: cantidad === 0 ? "not-allowed" : "pointer",
+        fontFamily: "inherit", fontSize: 13, fontWeight: 700, width: "100%",
+      }}>
+        {cantidad === 0 ? "Selecciona cantidad" : "🛒 Agregar al carrito"}
+      </button>
       <div style={{ height: 3, borderRadius: 2, background: "linear-gradient(90deg," + C.morado + "44," + C.moradoMedio + "99)" }} />
     </div>
   );
@@ -321,6 +436,8 @@ const WatermarkBg = ({ logo }) => (
 export default function App() {
   const [categoriaActiva, setCategoriaActiva] = useState("Todas");
   const [busqueda, setBusqueda] = useState("");
+  const [ordenCampo, setOrdenCampo] = useState("");
+  const [ordenDir, setOrdenDir] = useState("asc");
   const [carrito, setCarrito] = useState({});
   const [vista, setVista] = useState("catalogo");
   const [cantidades, setCantidades] = useState({});
@@ -332,13 +449,36 @@ export default function App() {
 
   const productosFiltrados = useMemo(() => {
     const q = normalizar(busqueda);
-    return PRODUCTOS.filter(p => {
+    let lista = PRODUCTOS.filter(p => {
       const enCat = categoriaActiva === "Todas" || p.categoria === categoriaActiva;
       const enBusq = normalizar(p.nombre).includes(q) || normalizar(p.marca).includes(q) ||
         normalizar(p.categoria).includes(q);
       return enCat && enBusq;
     });
-  }, [categoriaActiva, busqueda]);
+    if (ordenCampo === "nombre") {
+      lista = [...lista].sort((a, b) => ordenDir === "asc"
+        ? a.nombre.localeCompare(b.nombre)
+        : b.nombre.localeCompare(a.nombre));
+    } else if (ordenCampo === "precio") {
+      lista = [...lista].sort((a, b) => {
+        const pa = a.esColor ? a.colores[0].variantes[0].precio : a.variantes[0].precio;
+        const pb = b.esColor ? b.colores[0].variantes[0].precio : b.variantes[0].precio;
+        return ordenDir === "asc" ? pa - pb : pb - pa;
+      });
+    }
+    return lista;
+  }, [categoriaActiva, busqueda, ordenCampo, ordenDir]);
+
+  const toggleOrden = (campo) => {
+    if (ordenCampo === campo && ordenDir === "desc") {
+      // tercera pulsada: limpia el orden
+      setOrdenCampo(""); setOrdenDir("asc");
+    } else if (ordenCampo === campo) {
+      setOrdenDir("desc");
+    } else {
+      setOrdenCampo(campo); setOrdenDir("asc");
+    }
+  };
 
   const getCantidad = (id) => {
     const v = cantidades[id];
@@ -402,6 +542,72 @@ export default function App() {
     return Object.keys(e).length === 0;
   };
 
+  const descargarPDF = () => {
+    const fecha = new Date().toLocaleDateString("es-CL", { day: "2-digit", month: "long", year: "numeric" });
+    const nro = "COT-" + Date.now().toString().slice(-6);
+
+    const filas = items.map((item, idx) => `
+      <tr>
+        <td style="padding:9px 10px;border-bottom:1px solid #c8e6cc;background:${idx%2===0?"#f2fbf3":"#fff"}">${item.nombre}${item.marca&&item.marca!=="-"?" ("+item.marca+")":""}<br><small style="color:#888">${item.formato||""}</small></td>
+        <td style="padding:9px 10px;border-bottom:1px solid #c8e6cc;text-align:center;background:${idx%2===0?"#f2fbf3":"#fff"}">${item.cantidad}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #c8e6cc;text-align:right;background:${idx%2===0?"#f2fbf3":"#fff"};color:#555">${fmt(item.precio)}</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #c8e6cc;text-align:right;background:${idx%2===0?"#f2fbf3":"#fff"};font-weight:800;color:#2d7a34">${fmt(item.precio*item.cantidad)}</td>
+      </tr>`).join("");
+
+    const entregaTxt = tipoEntrega === "retiro"
+      ? "<b>Retiro en local</b> — Gratis"
+      : `<b>Envio a domicilio</b> — ${fmt(COSTO_ENVIO)}<br>Nombre: ${datosEnvio.nombre}<br>Telefono: ${datosEnvio.telefono}<br>Direccion: ${datosEnvio.direccion}, ${datosEnvio.comuna}${datosEnvio.nota?"<br>Nota: "+datosEnvio.nota:""}`;
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+    <title>Cotizacion ${nro}</title>
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{font-family:Arial,sans-serif;padding:24px;color:#1a1a1a;font-size:13px}
+      .top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:3px solid #4aad52;margin-bottom:18px}
+      .brand{font-size:24px;font-weight:900;line-height:1}.brand span{color:#4aad52}
+      .sub{font-size:10px;color:#888;letter-spacing:2px;margin-top:3px}
+      .tel{font-size:11px;color:#888;margin-top:6px}
+      .nro{text-align:right}.nro h1{font-size:20px;font-weight:900;color:#2d7a34}.nro p{font-size:11px;color:#888;margin-top:4px}
+      table{width:100%;border-collapse:collapse;margin-bottom:18px}
+      thead tr{background:#1a1a1a}thead th{padding:9px 10px;color:#fff;font-size:11px;text-transform:uppercase;text-align:left}
+      thead th:nth-child(2){text-align:center}thead th:nth-child(3),thead th:nth-child(4){text-align:right}
+      .totbox{display:flex;justify-content:flex-end;margin-bottom:18px}
+      .tot{border:2px solid #4aad52;border-radius:8px;padding:14px 18px;min-width:220px}
+      .tot-row{display:flex;justify-content:space-between;padding:4px 0;color:#555;font-size:13px}
+      .tot-final{display:flex;justify-content:space-between;border-top:2px solid #4aad52;margin-top:8px;padding-top:8px;font-size:16px;font-weight:900;color:#2d7a34}
+      .entrega{background:#f2fbf3;border:1.5px solid #c8e6cc;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8}
+      .entrega h3{font-size:11px;color:#2d7a34;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+      .footer{text-align:center;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:12px;margin-top:8px}
+      @media print{body{padding:12px}button{display:none!important}}
+    </style></head><body>
+    <div class="top">
+      <div><div class="brand">GEA-<span>DENTAL</span></div><div class="sub">INSUMOS DENTALES</div><div class="tel">+56 9 2718 8959</div></div>
+      <div class="nro"><div style="font-size:11px;color:#888">COTIZACION</div><h1>${nro}</h1><p>${fecha}</p></div>
+    </div>
+    <table>
+      <thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">P. Unit.</th><th style="text-align:right">Subtotal</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div class="totbox"><div class="tot">
+      <div class="tot-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
+      <div class="tot-row"><span>Envio</span><span>${tipoEntrega==="envio"?fmt(COSTO_ENVIO):"Gratis"}</span></div>
+      <div class="tot-final"><span>TOTAL</span><span>${fmt(total)}</span></div>
+    </div></div>
+    <div class="entrega"><h3>Entrega</h3>${entregaTxt}</div>
+    <div class="footer">GEA-DENTAL · Insumos Dentales de Calidad · +56 9 2718 8959 · Documento valido como cotizacion.</div>
+    <script>window.onload=()=>{window.print()}<\/script>
+    </body></html>`;
+
+    const blob = new Blob([html], { type:"text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cotizacion-" + nro + ".html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  };
   const generarWhatsApp = () => {
     if (items.length === 0 || !validar()) return;
     const lineas = items.map(i =>
@@ -454,14 +660,14 @@ export default function App() {
           color: "white", position: "sticky", top: 0, zIndex: 100,
           boxShadow: "0 3px 24px rgba(0,0,0,0.35)", borderBottom: "3px solid " + C.verde,
         }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "12px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <img src={LOGO} alt="Gea-Dental" style={{ width: 52, height: 52, objectFit: "contain", borderRadius: 8, background: "white", padding: 3 }} />
               <div>
                 <div style={{ fontSize: 11, opacity: 0.7, letterSpacing: 3, textTransform: "uppercase" }}>Catálogo & Cotizador</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: "white" }}>gea-</span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: C.verde }}>dental</span>
+                  <span style={{ fontSize: 20, fontWeight: 900, color: "white" }}>GEA-</span>
+                  <span style={{ fontSize: 20, fontWeight: 900, color: C.verde }}>DENTAL</span>
                 </div>
               </div>
             </div>
@@ -495,40 +701,40 @@ export default function App() {
                   <p>No hay productos aún.</p>
                 </div>
               ) : (<>
-                {/* Tabla productos */}
-                <div style={{ background: C.white, borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 20px rgba(0,0,0,0.1)", marginBottom: 20, border: "1px solid " + C.border }}>
-                  <div style={{
-                    display: "grid", gridTemplateColumns: "1fr 110px 130px 110px 40px",
-                    gap: 8, padding: "13px 20px",
-                    background: "linear-gradient(90deg," + C.negro + "," + C.verdeOsc + ")",
-                    color: "white", fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-                  }}>
-                    <span>Producto</span><span>Precio unit.</span><span style={{ textAlign: "center" }}>Cantidad</span><span>Subtotal</span><span></span>
-                  </div>
-                  {items.map((item, idx) => (
+                {/* Items carrito — responsive cards */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+                  {items.map((item) => (
                     <div key={item.id} style={{
-                      display: "grid", gridTemplateColumns: "1fr 110px 130px 110px 40px",
-                      gap: 8, padding: "14px 20px", alignItems: "center",
-                      borderBottom: "1px solid " + C.border,
-                      background: idx % 2 === 0 ? C.white : C.verdePale,
+                      background: C.white, borderRadius: 12, padding: "14px 16px",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.07)", border: "1px solid " + C.border,
                     }}>
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: 14 }}>{item.nombre}</div>
-                        <div style={{ fontSize: 12, color: C.textLight }}>{item.marca !== "-" ? item.marca + " · " : ""}{item.formato}</div>
+                      {/* Row 1: nombre + eliminar */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: C.text }}>{item.nombre}</div>
+                          <div style={{ fontSize: 12, color: C.textLight }}>{item.marca !== "-" ? item.marca + " · " : ""}{item.formato}</div>
+                          <div style={{ fontSize: 12, color: C.textLight, marginTop: 2 }}>Precio unit: <strong style={{color: C.verdeOsc}}>{fmt(item.precio)}</strong></div>
+                        </div>
+                        <button onClick={() => quitarDelCarrito(item.id)} style={{ background: "#fff0f0", border: "none", cursor: "pointer", color: "#e74c3c", fontSize: 18, fontWeight: 700, borderRadius: 6, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>×</button>
                       </div>
-                      <div style={{ fontSize: 14, color: C.textLight }}>{fmt(item.precio)}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, justifyContent: "center" }}>
-                        <button onClick={() => ajustarCarrito(item.id, -1)} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid " + C.border, background: C.white, cursor: "pointer", fontSize: 16, color: C.verde, fontWeight: 800 }}>−</button>
-                        <span style={{ minWidth: 28, textAlign: "center", fontWeight: 800 }}>{item.cantidad}</span>
-                        <button onClick={() => ajustarCarrito(item.id, 1)} style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid " + C.border, background: C.white, cursor: "pointer", fontSize: 16, color: C.verde, fontWeight: 800 }}>+</button>
+                      {/* Row 2: stepper + subtotal */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "center", border: "2px solid " + C.border, borderRadius: 10, overflow: "hidden" }}>
+                          <button onClick={() => ajustarCarrito(item.id, -1)} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
+                          <span style={{ minWidth: 36, textAlign: "center", fontSize: 15, fontWeight: 800, color: "#111", padding: "0 6px" }}>{item.cantidad}</span>
+                          <button onClick={() => ajustarCarrito(item.id, 1)} style={{ width: 36, height: 36, border: "none", background: C.verdePale, cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <div style={{ fontSize: 11, color: C.textLight }}>Total</div>
+                          <div style={{ fontSize: 18, fontWeight: 800, color: C.verdeOsc }}>{fmt(item.precio * item.cantidad)}</div>
+                        </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: C.verdeOsc, fontSize: 15 }}>{fmt(item.precio * item.cantidad)}</div>
-                      <button onClick={() => quitarDelCarrito(item.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "#e74c3c", fontSize: 20, fontWeight: 700 }}>×</button>
                     </div>
                   ))}
-                  <div style={{ padding: "14px 20px", background: C.verdeClaro, display: "flex", justifyContent: "flex-end", gap: 16, alignItems: "center" }}>
-                    <span style={{ fontSize: 14, color: C.textLight }}>Subtotal:</span>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: C.verdeOsc }}>{fmt(subtotal)}</span>
+                  {/* Subtotal strip */}
+                  <div style={{ background: C.verdeClaro, borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 14, color: C.textLight }}>Subtotal ({cantTotal} items)</span>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: C.verdeOsc }}>{fmt(subtotal)}</span>
                   </div>
                 </div>
 
@@ -604,16 +810,28 @@ export default function App() {
                   </div>
                 </div>
 
-                <button onClick={generarWhatsApp} style={{
-                  width: "100%", padding: 18,
-                  background: "linear-gradient(90deg,#25D366,#1da851)",
-                  color: "white", border: "none", borderRadius: 12,
-                  fontSize: 17, fontWeight: 800, cursor: "pointer",
-                  fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                  boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-                }}>
-                  💬 Enviar cotización por WhatsApp
-                </button>
+                {/* Botones de acción */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <button onClick={generarWhatsApp} style={{
+                    width: "100%", padding: 18,
+                    background: "linear-gradient(90deg,#25D366,#1da851)",
+                    color: "white", border: "none", borderRadius: 12,
+                    fontSize: 17, fontWeight: 800, cursor: "pointer",
+                    fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                    boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
+                  }}>
+                    💬 Enviar cotización por WhatsApp
+                  </button>
+                  <button onClick={descargarPDF} style={{
+                    width: "100%", padding: 14,
+                    background: "linear-gradient(90deg," + C.morado + "," + C.moradoMedio + ")",
+                    color: "white", border: "none", borderRadius: 12,
+                    fontSize: 15, fontWeight: 700, cursor: "pointer",
+                    fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  }}>
+                    📄 Descargar cotización PDF
+                  </button>
+                </div>
               </>)}
             </div>
 
@@ -635,10 +853,41 @@ export default function App() {
                   }}>{cat}</button>
                 ))}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(265px, 1fr))", gap: 14 }}>
-                {productosFiltrados.map(producto => {
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(265px, 100%), 1fr))", gap: 14 }}>
+                {/* Sort bar */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
+                <label style={{ fontSize: 13, color: C.textLight, fontWeight: 600, whiteSpace: "nowrap" }}>Ordenar por:</label>
+                <select
+                  value={ordenCampo + "_" + ordenDir}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === "_asc") { setOrdenCampo(""); setOrdenDir("asc"); }
+                    else { const [c, d] = val.split("_"); setOrdenCampo(c); setOrdenDir(d); }
+                  }}
+                  style={{
+                    padding: "9px 14px", borderRadius: 10, border: "2px solid " + C.border,
+                    fontSize: 14, fontFamily: "inherit", color: C.text,
+                    background: C.white, cursor: "pointer", outline: "none",
+                    fontWeight: 600, minWidth: 200,
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                    appearance: "none",
+                    paddingRight: 14,
+                  }}
+                >
+                  <option value="_asc">Relevancia (por defecto)</option>
+                  <option value="nombre_asc">Nombre: A → Z</option>
+                  <option value="nombre_desc">Nombre: Z → A</option>
+                  <option value="precio_asc">Precio: menor a mayor</option>
+                  <option value="precio_desc">Precio: mayor a menor</option>
+                </select>
+              </div>
+
+              {productosFiltrados.map(producto => {
                   if (producto.esDiente) {
                     return <DienteCard key={producto.id} producto={producto} onAgregar={agregarDienteAlCarrito} C={C} fmt={fmt} />;
+                  }
+                  if (producto.esColor) {
+                    return <ColorVarianteCard key={producto.id} producto={producto} carrito={carrito} onAgregar={agregarAlCarrito} C={C} fmt={fmt} />;
                   }
                   return <VarianteCard key={producto.id} producto={producto} carrito={carrito} onAgregar={agregarAlCarrito} C={C} fmt={fmt} />;
                 })}
@@ -656,8 +905,8 @@ export default function App() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
             <img src={LOGO} alt="" style={{ width: 28, height: 28, objectFit: "contain" }} />
             <span style={{ fontSize: 13, color: C.textLight }}>
-              <span style={{ fontWeight: 700, color: C.negroMedio }}>gea-</span>
-              <span style={{ fontWeight: 700, color: C.verde }}>dental</span>
+              <span style={{ fontWeight: 700, color: C.negroMedio }}>GEA-</span>
+              <span style={{ fontWeight: 700, color: C.verde }}>DENTAL</span>
               {" · "}Insumos de calidad para profesionales y estudiantes
             </span>
           </div>
