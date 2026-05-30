@@ -29,8 +29,11 @@ const PRODUCTOS = [
   { id: 14, nombre: "Alginato", marca: "Vigodent", categoria: "Yesos",
     variantes: [{ formato: "454g", precio: 6800 }] },
   // ── Monómeros ──
-  { id: 15, nombre: "Monómero Auto/Termo", marca: "Veracril", categoria: "Monómeros",
-    variantes: [{ formato: "1L", precio: 35000 }, { formato: "500ml", precio: 17200 }, { formato: "250ml", precio: 7990 }] },
+  { id: 15, nombre: "Monómero", marca: "Veracril", categoria: "Monómeros", esColor: true,
+    colores: [
+      { color: "Termocurado", variantes: [{ formato: "1L", precio: 35000 }, { formato: "500ml", precio: 17200 }, { formato: "250ml", precio: 7990 }] },
+      { color: "Autocurado",  variantes: [{ formato: "1L", precio: 35000 }, { formato: "500ml", precio: 17200 }, { formato: "250ml", precio: 7990 }] },
+    ]},
   { id: 18, nombre: "Monómero Termocurado", marca: "Marche", categoria: "Monómeros",
     variantes: [{ formato: "75cc", precio: 2990 }, { formato: "210cc", precio: 6900 }] },
   { id: 20, nombre: "Monómero Autocurado", marca: "Marche", categoria: "Monómeros",
@@ -97,7 +100,8 @@ const COSTO_ENVIO = 4000;
 const DIENTES_CONFIG = {
   "Anterior Superior": ["419","390","468","447","503","470","425","438","T6","448","426","O3"],
   "Anterior Inferior": ["U25","U37","U67","U38","U70","L8"],
-  "Posterior": ["32","34"],
+  "Posterior Superior": ["32","34"],
+  "Posterior Inferior": ["32","34"],
 };
 const DIENTES_COLORES = ["A1","A2","A3","A3.5","A4","B3","C3","C4","D3"];
 
