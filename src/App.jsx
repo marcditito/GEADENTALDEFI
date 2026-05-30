@@ -446,6 +446,11 @@ export default function App() {
   const [vista, setVista] = useState("catalogo");
   const [cantidades, setCantidades] = useState({});
   const [tipoEntrega, setTipoEntrega] = useState("retiro");
+  const [mostrarRecargo, setMostrarRecargo] = useState(false);
+  const [recargoPct, setRecargoPct] = useState("");
+  const [pinIngresado, setPinIngresado] = useState("");
+  const [pinOk, setPinOk] = useState(false);
+  const PIN = "1515"; // cambia esto por tu PIN secreto
   const [datosEnvio, setDatosEnvio] = useState({ nombre: "", telefono: "", correo: "", direccion: "", comuna: "", nota: "" });
   const [errores, setErrores] = useState({});
 
@@ -528,7 +533,8 @@ export default function App() {
   const items = Object.values(carrito);
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const costoEnvio = tipoEntrega === "envio" ? COSTO_ENVIO : 0;
-  const total = subtotal + costoEnvio;
+  const montoRecargo = recargoPct && pinOk ? Math.round((subtotal + costoEnvio) * parseFloat(recargoPct) / 100) : 0;
+  const total = subtotal + costoEnvio + montoRecargo;
   const cantTotal = items.reduce((s, i) => s + i.cantidad, 0);
 
   const validarEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -562,6 +568,12 @@ export default function App() {
       ? "<b>Retiro en local</b> — Gratis"
       : `<b>Envio a domicilio</b> — ${fmt(COSTO_ENVIO)}<br>Nombre: ${datosEnvio.nombre}<br>Telefono: ${datosEnvio.telefono}<br>Direccion: ${datosEnvio.direccion}, ${datosEnvio.comuna}${datosEnvio.nota?"<br>Nota: "+datosEnvio.nota:""}`;
 
+    const recargoHtml = montoRecargo > 0 ? `
+      <div class="tot-row recargo">
+        <span>💳 Recargo tarjeta (${recargoPct}%)<br><small>Comision por pago con tarjeta de credito</small></span>
+        <span>+${fmt(montoRecargo)}</span>
+      </div>` : "";
+
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
     <title>Cotizacion ${nro}</title>
     <style>
@@ -576,9 +588,12 @@ export default function App() {
       thead tr{background:#1a1a1a}thead th{padding:9px 10px;color:#fff;font-size:11px;text-transform:uppercase;text-align:left}
       thead th:nth-child(2){text-align:center}thead th:nth-child(3),thead th:nth-child(4){text-align:right}
       .totbox{display:flex;justify-content:flex-end;margin-bottom:18px}
-      .tot{border:2px solid #4aad52;border-radius:8px;padding:14px 18px;min-width:220px}
-      .tot-row{display:flex;justify-content:space-between;padding:4px 0;color:#555;font-size:13px}
-      .tot-final{display:flex;justify-content:space-between;border-top:2px solid #4aad52;margin-top:8px;padding-top:8px;font-size:16px;font-weight:900;color:#2d7a34}
+      .tot{border:2px solid #4aad52;border-radius:8px;padding:14px 18px;min-width:240px}
+      .tot-row{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;color:#555;font-size:13px;gap:12px}
+      .tot-row small{font-size:10px;color:#aaa;display:block;margin-top:1px}
+      .recargo{color:#e67e22;font-weight:600}
+      .tot-final{display:flex;justify-content:space-between;border-top:2px solid #4aad52;margin-top:8px;padding-top:8px;font-size:17px;font-weight:900;color:#2d7a34}
+      .nota-recargo{background:#fff8e6;border:1px solid #f0c040;border-radius:6px;padding:8px 12px;font-size:11px;color:#7d5a00;margin-top:10px;line-height:1.5}
       .entrega{background:#f2fbf3;border:1.5px solid #c8e6cc;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8}
       .entrega h3{font-size:11px;color:#2d7a34;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
       .footer{text-align:center;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:12px;margin-top:8px}
@@ -593,9 +608,11 @@ export default function App() {
       <tbody>${filas}</tbody>
     </table>
     <div class="totbox"><div class="tot">
-      <div class="tot-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
+      <div class="tot-row"><span>Subtotal productos</span><span>${fmt(subtotal)}</span></div>
       <div class="tot-row"><span>Envio</span><span>${tipoEntrega==="envio"?fmt(COSTO_ENVIO):"Gratis"}</span></div>
+      ${recargoHtml}
       <div class="tot-final"><span>TOTAL</span><span>${fmt(total)}</span></div>
+      ${montoRecargo>0?`<div class="nota-recargo">ℹ️ Se aplica un recargo del ${recargoPct}% por pago con tarjeta de credito. Este monto corresponde a la comision bancaria que se traslada al cliente.</div>`:""}
     </div></div>
     <div class="entrega"><h3>Entrega</h3>${entregaTxt}</div>
     <div class="footer">GEA-DENTAL · Insumos Dentales de Calidad · +56 9 2718 8959 · Documento valido como cotizacion.</div>
@@ -805,10 +822,97 @@ export default function App() {
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 14, color: C.textLight }}>
                     <span>Subtotal</span><span>{fmt(subtotal)}</span>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, fontSize: 14, color: tipoEntrega === "envio" ? C.morado : C.verde }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 14, color: tipoEntrega === "envio" ? C.morado : C.verde }}>
                     <span>{tipoEntrega === "envio" ? "🚚 Envío a domicilio" : "🏪 Retiro en local"}</span>
                     <span style={{ fontWeight: 700 }}>{tipoEntrega === "envio" ? fmt(COSTO_ENVIO) : "Gratis"}</span>
                   </div>
+
+                  {/* Recargo tarjeta — solo visible si pinOk */}
+                  {pinOk && montoRecargo > 0 && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 14, color: "#e67e22" }}>
+                      <span>💳 Recargo tarjeta ({recargoPct}%)</span>
+                      <span style={{ fontWeight: 700 }}>+{fmt(montoRecargo)}</span>
+                    </div>
+                  )}
+
+                  {/* Botón secreto recargo */}
+                  <div style={{ marginBottom: 10 }}>
+                    {!mostrarRecargo ? (
+                      <button onClick={() => setMostrarRecargo(true)} style={{
+                        background: "none", border: "1px dashed " + C.border, borderRadius: 8,
+                        padding: "6px 12px", cursor: "pointer", fontSize: 12,
+                        color: C.textLight, fontFamily: "inherit", width: "100%",
+                      }}>🔒 Administrador</button>
+                    ) : !pinOk ? (
+                      <div style={{ background: "#fff8e6", border: "1.5px solid #f0c040", borderRadius: 10, padding: 12, display: "flex", gap: 8, alignItems: "center" }}>
+                        <input
+                          type="password" placeholder="PIN"
+                          value={pinIngresado}
+                          onChange={e => setPinIngresado(e.target.value)}
+                          onKeyDown={e => { if (e.key === "Enter") { if (pinIngresado === PIN) setPinOk(true); else { setPinIngresado(""); alert("PIN incorrecto"); } }}}
+                          style={{ width: 80, padding: "7px 10px", borderRadius: 7, border: "1.5px solid #f0c040", fontSize: 14, textAlign: "center", fontFamily: "inherit", outline: "none" }}
+                          maxLength={6}
+                        />
+                        <button onClick={() => { if (pinIngresado === PIN) setPinOk(true); else { setPinIngresado(""); alert("PIN incorrecto"); }}} style={{
+                          background: "#e67e22", color: "white", border: "none", borderRadius: 7,
+                          padding: "7px 14px", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: 700,
+                        }}>Ingresar</button>
+                        <button onClick={() => { setMostrarRecargo(false); setPinIngresado(""); }} style={{
+                          background: "none", border: "none", cursor: "pointer", color: C.textLight, fontSize: 18,
+                        }}>×</button>
+                      </div>
+                    ) : (
+                      <div style={{ background: "#fff8e6", border: "1.5px solid #f0c040", borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", gap: 12 }}>
+                        {/* Header admin */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: "#7d5a00" }}>🔒 Panel Administrador</span>
+                          <button onClick={() => { setPinOk(false); setMostrarRecargo(false); setRecargoPct(""); setPinIngresado(""); }} style={{ background: "none", border: "none", cursor: "pointer", color: C.textLight, fontSize: 20 }}>×</button>
+                        </div>
+
+                        {/* Recargo % */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: 13, color: "#7d5a00", fontWeight: 600 }}>💳 Recargo tarjeta de crédito:</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <input
+                              type="number" min="0" max="30" step="0.5"
+                              value={recargoPct}
+                              onChange={e => setRecargoPct(e.target.value)}
+                              placeholder="0"
+                              style={{ width: 60, padding: "6px 8px", borderRadius: 7, border: "1.5px solid #f0c040", fontSize: 14, textAlign: "center", fontFamily: "inherit", outline: "none", color: "#111", background: "white" }}
+                            />
+                            <span style={{ fontSize: 14, fontWeight: 700, color: "#7d5a00" }}>%</span>
+                          </div>
+                        </div>
+
+                        {/* Desglose automático */}
+                        {recargoPct && parseFloat(recargoPct) > 0 && (
+                          <div style={{ background: "white", borderRadius: 8, padding: 12, border: "1px solid #f0c040", fontSize: 13 }}>
+                            <div style={{ fontWeight: 700, color: "#7d5a00", marginBottom: 8, fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}>📊 Desglose de cobro</div>
+                            <div style={{ display: "flex", justifyContent: "space-between", color: "#555", marginBottom: 5 }}>
+                              <span>Subtotal productos</span><span>{fmt(subtotal)}</span>
+                            </div>
+                            {costoEnvio > 0 && (
+                              <div style={{ display: "flex", justifyContent: "space-between", color: "#555", marginBottom: 5 }}>
+                                <span>Envío</span><span>{fmt(costoEnvio)}</span>
+                              </div>
+                            )}
+                            <div style={{ display: "flex", justifyContent: "space-between", color: "#e67e22", marginBottom: 5, borderTop: "1px dashed #f0c040", paddingTop: 6 }}>
+                              <span>Recargo tarjeta ({recargoPct}%)</span>
+                              <span style={{ fontWeight: 700 }}>+{fmt(montoRecargo)}</span>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", color: "#2d7a34", fontWeight: 800, fontSize: 15, borderTop: "2px solid #f0c040", paddingTop: 8, marginTop: 4 }}>
+                              <span>Total a cobrar con tarjeta</span>
+                              <span>{fmt(total)}</span>
+                            </div>
+                            <div style={{ marginTop: 8, padding: "6px 10px", background: "#fff3cd", borderRadius: 6, fontSize: 11, color: "#7d5a00" }}>
+                              ℹ️ El recargo cubre el costo de la comisión por uso de tarjeta de crédito ({recargoPct}% sobre el total de la venta).
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
                   <div style={{ display: "flex", justifyContent: "space-between", borderTop: "2px solid " + C.border, paddingTop: 12, fontSize: 20, fontWeight: 800, color: C.verdeOsc }}>
                     <span>TOTAL</span><span>{fmt(total)}</span>
                   </div>
@@ -826,15 +930,19 @@ export default function App() {
                   }}>
                     💬 Enviar cotización por WhatsApp
                   </button>
-                  <button onClick={descargarPDF} style={{
-                    width: "100%", padding: 14,
-                    background: "linear-gradient(90deg," + C.morado + "," + C.moradoMedio + ")",
-                    color: "white", border: "none", borderRadius: 12,
-                    fontSize: 15, fontWeight: 700, cursor: "pointer",
-                    fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                  }}>
-                    📄 Descargar cotización PDF
-                  </button>
+
+                  {/* Botón PDF solo visible para admin (pinOk) */}
+                  {pinOk && (
+                    <button onClick={descargarPDF} style={{
+                      width: "100%", padding: 14,
+                      background: "linear-gradient(90deg," + C.morado + "," + C.moradoMedio + ")",
+                      color: "white", border: "none", borderRadius: 12,
+                      fontSize: 15, fontWeight: 700, cursor: "pointer",
+                      fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                    }}>
+                      📄 Descargar cotización PDF
+                    </button>
+                  )}
                 </div>
               </>)}
             </div>
