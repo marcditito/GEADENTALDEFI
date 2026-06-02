@@ -241,17 +241,18 @@ const VarianteCard = ({ producto, carrito, onAgregar, C, fmt }) => {
   };
 
   return (
-    <div style={{
+    <div className="card-anim" style={{
       background: "rgba(255,255,255,0.92)", borderRadius: 12, padding: 16,
       boxShadow: "0 2px 14px rgba(0,0,0,0.08)",
       border: "2px solid " + (enCarrito ? C.verde : C.border),
       backdropFilter: "blur(4px)",
       display: "flex", flexDirection: "column", gap: 10,
+      transition: "border-color 0.2s",
     }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ fontSize: 11, background: C.verdeClaro, color: C.verdeOsc, padding: "3px 8px", borderRadius: 4, textTransform: "uppercase", letterSpacing: 1, fontWeight: 700 }}>{producto.categoria}</span>
-        {enCarrito && <span style={{ fontSize: 11, background: C.verde, color: "white", padding: "3px 8px", borderRadius: 4, fontWeight: 700 }}>✓ Agregado</span>}
+        {enCarrito && <span className="pop-in" style={{ fontSize: 11, background: C.verde, color: "white", padding: "3px 8px", borderRadius: 4, fontWeight: 700 }}>✓ Agregado</span>}
       </div>
 
       {/* Nombre y marca */}
@@ -420,6 +421,115 @@ const DienteCard = ({ producto, onAgregar, C, fmt }) => {
   );
 };
 
+
+// ── Inject global CSS animations ──
+const GlobalStyles = () => (
+  <style>{`
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      0%   { transform: scale(0.7); opacity: 0; }
+      70%  { transform: scale(1.08); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes cartBounce {
+      0%,100% { transform: scale(1); }
+      25%     { transform: scale(1.3) rotate(-5deg); }
+      50%     { transform: scale(0.9) rotate(3deg); }
+      75%     { transform: scale(1.1); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes letterJump {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-5px); }
+    }
+    @keyframes borderRun {
+      0%   { stroke-dashoffset: 600; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes scanLine {
+      0%   { top: 0%; opacity: 0.6; }
+      100% { top: 100%; opacity: 0; }
+    }
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 0 6px 0px rgba(74,173,82,0.5); }
+      50%      { box-shadow: 0 0 18px 4px rgba(74,173,82,0.8); }
+    }
+    @keyframes neonFlicker {
+      0%,95%,100% { opacity: 1; }
+      96%          { opacity: 0.6; }
+      98%          { opacity: 0.9; }
+    }
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes dash {
+      to { stroke-dashoffset: 0; }
+    }
+    .card-anim {
+      animation: fadeInUp 0.45s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .card-anim:hover {
+      transform: translateY(-5px) scale(1.01) !important;
+      box-shadow: 0 10px 32px rgba(74,173,82,0.18) !important;
+      border-color: rgba(74,173,82,0.6) !important;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+    }
+    .btn-press { transition: transform 0.1s ease; }
+    .btn-press:active { transform: scale(0.93) !important; }
+    .cart-bounce { animation: cartBounce 0.5s cubic-bezier(0.36,0.07,0.19,0.97); }
+    .pop-in { animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .slide-down { animation: slideDown 0.28s ease both; }
+    .glow-pulse { animation: glowPulse 2s ease-in-out infinite; }
+    .neon { animation: neonFlicker 4s infinite; }
+    .ws-btn-wrap { position: relative; display: block; }
+    .ws-btn-wrap svg.ring {
+      position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
+      pointer-events: none; border-radius: 16px; overflow: visible;
+    }
+    .ws-btn-wrap svg.ring rect {
+      fill: none; stroke: #25D366; stroke-width: 2.5;
+      stroke-dasharray: 600; stroke-dashoffset: 600;
+      animation: borderRun 2s linear infinite;
+      rx: 14; ry: 14;
+    }
+    .ws-scan { position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(37,211,102,0.7), transparent);
+      animation: scanLine 1.8s linear infinite; pointer-events: none; border-radius: 2px; }
+    .brand-letter {
+      display: inline-block;
+      animation: letterJump 1.2s ease-in-out infinite;
+    }
+    .brand-letter:nth-child(1)  { animation-delay: 0.00s; }
+    .brand-letter:nth-child(2)  { animation-delay: 0.08s; }
+    .brand-letter:nth-child(3)  { animation-delay: 0.16s; }
+    .brand-letter:nth-child(4)  { animation-delay: 0.24s; }
+    .brand-letter:nth-child(5)  { animation-delay: 0.32s; }
+    .brand-letter:nth-child(6)  { animation-delay: 0.40s; }
+    .brand-letter:nth-child(7)  { animation-delay: 0.48s; }
+    .brand-letter:nth-child(8)  { animation-delay: 0.56s; }
+    .brand-letter:nth-child(9)  { animation-delay: 0.64s; }
+    .brand-letter:nth-child(10) { animation-delay: 0.72s; }
+    .futuristic-header {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 40%, #0d2d14 100%) !important;
+      border-bottom: 2px solid #4aad52 !important;
+      box-shadow: 0 2px 20px rgba(74,173,82,0.25) !important;
+    }
+    .header-grid-bg {
+      position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
+      background-image: linear-gradient(rgba(74,173,82,0.8) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(74,173,82,0.8) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  `}</style>
+);
+
 // Watermark grid
 const WatermarkBg = ({ logo }) => (
   <div style={{
@@ -450,6 +560,7 @@ export default function App() {
   const [recargoPct, setRecargoPct] = useState("");
   const [pinIngresado, setPinIngresado] = useState("");
   const [pinOk, setPinOk] = useState(false);
+  const [cartAnim, setCartAnim] = useState(false);
   const PIN = "1515"; // cambia esto por tu PIN secreto
   const [datosEnvio, setDatosEnvio] = useState({ nombre: "", telefono: "", correo: "", direccion: "", comuna: "", nota: "" });
   const [errores, setErrores] = useState({});
@@ -497,6 +608,11 @@ export default function App() {
   };
 
   // agregarAlCarrito: recibe producto + variante seleccionada + cantidad
+  const triggerCartBounce = () => {
+    setCartAnim(true);
+    setTimeout(() => setCartAnim(false), 400);
+  };
+
   const agregarAlCarrito = (producto, variante, cant) => {
     const key = producto.id + "_" + variante.formato;
     setCarrito(prev => ({
@@ -510,6 +626,7 @@ export default function App() {
         cantidad: (prev[key]?.cantidad || 0) + cant,
       }
     }));
+    triggerCartBounce();
   };
 
   const agregarDienteAlCarrito = (itemDiente) => {
@@ -521,6 +638,7 @@ export default function App() {
         cantidad: (prev[itemDiente.id]?.cantidad || 0) + itemDiente.cantidad,
       }
     }));
+    triggerCartBounce();
   };
 
   const quitarDelCarrito = (id) => setCarrito(prev => { const n = { ...prev }; delete n[id]; return n; });
@@ -672,27 +790,31 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: "'Segoe UI', sans-serif", minHeight: "100vh", background: C.bg, color: C.text, position: "relative" }}>
+      <GlobalStyles />
       <WatermarkBg logo={LOGO} />
       <div style={{ position: "relative", zIndex: 1 }}>
 
         {/* HEADER */}
-        <header style={{
-          background: "linear-gradient(135deg, " + C.negro + " 0%, " + C.negroMedio + " 40%, " + C.verdeOsc + " 100%)",
-          color: "white", position: "sticky", top: 0, zIndex: 100,
-          boxShadow: "0 3px 24px rgba(0,0,0,0.35)", borderBottom: "3px solid " + C.verde,
-        }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+        <header className="futuristic-header" style={{ color: "white", position: "sticky", top: 0, zIndex: 100, }}>
+          <div className="header-grid-bg" />
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, position: "relative" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <img src={LOGO} alt="Gea-Dental" style={{ width: 52, height: 52, objectFit: "contain", borderRadius: 8, background: "white", padding: 3 }} />
               <div>
-                <div style={{ fontSize: 11, opacity: 0.7, letterSpacing: 3, textTransform: "uppercase" }}>Catálogo & Cotizador</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: "white" }}>GEA-</span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: C.verde }}>DENTAL</span>
+                <div style={{ fontSize: 11, opacity: 0.6, letterSpacing: 3, textTransform: "uppercase", color: "#4aad52" }}>Catálogo & Cotizador</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 0, fontFamily: "monospace" }}>
+                  {"GEA-".split("").map((l,i) => (
+                    <span key={i} className="brand-letter neon" style={{ fontSize: 21, fontWeight: 900, color: "white", letterSpacing: 1 }}>{l}</span>
+                  ))}
+                  {"DENTAL".split("").map((l,i) => (
+                    <span key={i} className="brand-letter neon" style={{ fontSize: 21, fontWeight: 900, color: "#4aad52", letterSpacing: 1 }}>{l}</span>
+                  ))}
                 </div>
               </div>
             </div>
-            <button onClick={() => setVista(v => v === "carrito" ? "catalogo" : "carrito")} style={{
+            <button onClick={() => setVista(v => v === "carrito" ? "catalogo" : "carrito")}
+              className={cartAnim ? "cart-bounce" : ""}
+              style={{
               background: cantTotal > 0 ? C.verde : "rgba(255,255,255,0.12)",
               color: "white", border: "2px solid " + (cantTotal > 0 ? C.verdeOsc : "rgba(255,255,255,0.3)"),
               borderRadius: 30, padding: "10px 20px", cursor: "pointer",
@@ -708,7 +830,7 @@ export default function App() {
 
           {vista === "carrito" ? (
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
+              <div className="slide-down" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
                 <button onClick={() => setVista("catalogo")} style={{
                   background: "none", border: "2px solid " + C.verde, borderRadius: 8,
                   padding: "8px 16px", cursor: "pointer", fontFamily: "inherit", fontSize: 14, color: C.verde, fontWeight: 700,
@@ -920,16 +1042,24 @@ export default function App() {
 
                 {/* Botones de acción */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  <button onClick={generarWhatsApp} style={{
-                    width: "100%", padding: 18,
-                    background: "linear-gradient(90deg,#25D366,#1da851)",
-                    color: "white", border: "none", borderRadius: 12,
-                    fontSize: 17, fontWeight: 800, cursor: "pointer",
-                    fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                    boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-                  }}>
-                    💬 Enviar cotización por WhatsApp
-                  </button>
+                  <div className="ws-btn-wrap">
+                    <svg className="ring" viewBox="0 0 100% 100%" preserveAspectRatio="none" style={{ position:"absolute", inset:-4, width:"calc(100% + 8px)", height:"calc(100% + 8px)", pointerEvents:"none", overflow:"visible" }}>
+                      <rect x="2" y="2" width="calc(100% - 4)" height="calc(100% - 4)" rx="14" ry="14"
+                        style={{ fill:"none", stroke:"#25D366", strokeWidth:2.5, strokeDasharray:600, strokeDashoffset:600, animation:"borderRun 2s linear infinite" }} />
+                    </svg>
+                    <div className="ws-scan" />
+                    <button onClick={generarWhatsApp}
+                      className="btn-press glow-pulse"
+                      style={{
+                        width: "100%", padding: 18, position: "relative", overflow: "hidden",
+                        background: "linear-gradient(90deg,#128c3a,#25D366,#1da851)",
+                        color: "white", border: "none", borderRadius: 12,
+                        fontSize: 17, fontWeight: 800, cursor: "pointer",
+                        fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                      }}>
+                      💬 Enviar cotización por WhatsApp
+                    </button>
+                  </div>
 
                   {/* Botón PDF solo visible para admin (pinOk) */}
                   {pinOk && (
