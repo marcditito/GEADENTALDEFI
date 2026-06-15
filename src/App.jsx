@@ -72,6 +72,10 @@ const PRODUCTOS = [
   { id:44, nombre:"Láminas Rígidas 1.5mm", marca:"Bioart", categoria:"Láminas", variantes:[{formato:"5 unidades",precio:5990}]},
   { id:45, nombre:"Láminas Rígidas 1.5mm", marca:"Ehros", categoria:"Láminas", variantes:[{formato:"15 unidades",precio:19000}]},
   { id:58, nombre:"Caja de Ortodoncia", marca:"-", categoria:"Materiales", variantes:[{formato:"10 unidades",precio:5500}]},
+  // ── Endodoncia ──
+  { id:59, nombre:"Lima K", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:4790}]},
+  { id:60, nombre:"Cono Gutta", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:3490}]},
+  { id:61, nombre:"Cemento", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:54900}]},
   { id:50, nombre:"Soldadura Dental", marca:"Morelli", categoria:"Soldadura", variantes:[{formato:"5 metros",precio:42000},{formato:"4 varillas",precio:30000}]},
 ];
 
@@ -425,6 +429,7 @@ export default function App() {
   const [pinIngresado, setPinIngresado] = useState("");
   const [pinOk, setPinOk] = useState(false);
   const [cartAnim, setCartAnim] = useState(false);
+  const [descuentoPct, setDescuentoPct] = useState("");
   const PIN = "1515";
 
   // normalizar: elimina tildes y mayúsculas para búsqueda flexible.
@@ -494,7 +499,9 @@ export default function App() {
   const subtotal = items.reduce((s,i)=>s+i.precio*i.cantidad,0);
   const costoEnvio = tipoEntrega==="envio"?COSTO_ENVIO:0;
   const montoRecargo = recargoPct&&pinOk?Math.round((subtotal+costoEnvio)*parseFloat(recargoPct)/100):0;
-  const total = subtotal+costoEnvio+montoRecargo;
+  // montoDescuento: descuento aplicado por el admin sobre el subtotal
+  const montoDescuento = descuentoPct&&pinOk?Math.round(subtotal*parseFloat(descuentoPct)/100):0;
+  const total = subtotal+costoEnvio+montoRecargo-montoDescuento;
   const cantTotal = items.reduce((s,i)=>s+i.cantidad,0);
 
   // validar: revisa que los campos de envío estén completos.
@@ -531,9 +538,9 @@ export default function App() {
     const nro="COT-"+Date.now().toString().slice(-6);
     const filas=items.map((i,idx)=>`<tr><td style="padding:9px 10px;border-bottom:1px solid #c8e6cc;background:${idx%2===0?"#f2fbf3":"#fff"}">${i.nombre}${i.marca&&i.marca!=="-"?" ("+i.marca+")":""}<br><small style="color:#888">${i.formato||""}</small></td><td style="padding:9px 10px;text-align:center;border-bottom:1px solid #c8e6cc;background:${idx%2===0?"#f2fbf3":"#fff"}">${i.cantidad}</td><td style="padding:9px 10px;text-align:right;border-bottom:1px solid #c8e6cc;background:${idx%2===0?"#f2fbf3":"#fff"};color:#555">${fmt(i.precio)}</td><td style="padding:9px 10px;text-align:right;border-bottom:1px solid #c8e6cc;background:${idx%2===0?"#f2fbf3":"#fff"};font-weight:800;color:#2d7a34">${fmt(i.precio*i.cantidad)}</td></tr>`).join("");
     const entregaTxt=tipoEntrega==="retiro"?"<b>Retiro en local</b> — Gratis":`<b>Envio a domicilio</b> — ${fmt(COSTO_ENVIO)}<br>Nombre: ${datosEnvio.nombre}<br>Tel: ${datosEnvio.telefono}<br>Dir: ${datosEnvio.direccion}, ${datosEnvio.comuna}${datosEnvio.nota?"<br>Nota: "+datosEnvio.nota:""}`;
-    const recargoHtml=montoRecargo>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;color:#e67e22;font-weight:600;gap:12px"><span>💳 Recargo tarjeta (${recargoPct}%)<br><small style="color:#aaa;font-size:10px">Comisión por pago con tarjeta de crédito</small></span><span>+${fmt(montoRecargo)}</span></div>`:"";
+    const descuentoHtml=montoDescuento>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;color:#27ae60;font-weight:600"><span>🎁 Descuento (${descuentoPct}%)</span><span>− ${fmt(montoDescuento)}</span></div>`:""; const recargoHtml=montoRecargo>0?`<div style="display:flex;justify-content:space-between;padding:5px 0;color:#e67e22;font-weight:600;gap:12px"><span>💳 Recargo tarjeta (${recargoPct}%)<br><small style="color:#aaa;font-size:10px">Comisión por pago con tarjeta de crédito</small></span><span>+${fmt(montoRecargo)}</span></div>`:"";
     const notaRecargo=montoRecargo>0?`<div style="background:#fff8e6;border:1px solid #f0c040;border-radius:6px;padding:8px 12px;font-size:11px;color:#7d5a00;margin-top:10px">ℹ️ Se aplica un recargo del ${recargoPct}% por pago con tarjeta de crédito. Este monto corresponde a la comisión bancaria trasladada al cliente.</div>`:"";
-    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cotizacion ${nro}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#1a1a1a;font-size:13px}.top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:3px solid #4aad52;margin-bottom:18px}.brand{font-size:24px;font-weight:900}.brand span{color:#4aad52}table{width:100%;border-collapse:collapse;margin-bottom:18px}thead tr{background:#1a1a1a}thead th{padding:9px 10px;color:#fff;font-size:11px;text-transform:uppercase;text-align:left}.totbox{display:flex;justify-content:flex-end;margin-bottom:18px}.tot{border:2px solid #4aad52;border-radius:8px;padding:14px 18px;min-width:250px}.tot-row{display:flex;justify-content:space-between;padding:5px 0;color:#555;font-size:13px}.tot-final{display:flex;justify-content:space-between;border-top:2px solid #4aad52;margin-top:8px;padding-top:8px;font-size:17px;font-weight:900;color:#2d7a34}.entrega{background:#f2fbf3;border:1.5px solid #c8e6cc;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8}.footer{text-align:center;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:12px;margin-top:8px}@media print{body{padding:12px}}</style></head><body><div class="top"><div><div class="brand">GEA-<span>DENTAL</span></div><div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:3px">INSUMOS DENTALES</div><div style="font-size:11px;color:#888;margin-top:6px">+56 9 2718 8959</div></div><div style="text-align:right"><div style="font-size:11px;color:#888">COTIZACION</div><div style="font-size:20px;font-weight:900;color:#2d7a34">${nro}</div><div style="font-size:11px;color:#888">${fecha}</div></div></div><table><thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">P.Unit.</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>${filas}</tbody></table><div class="totbox"><div class="tot"><div class="tot-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div><div class="tot-row"><span>Envío</span><span>${tipoEntrega==="envio"?fmt(COSTO_ENVIO):"Gratis"}</span></div>${recargoHtml}<div class="tot-final"><span>TOTAL</span><span>${fmt(total)}</span></div>${notaRecargo}</div></div><div class="entrega"><strong style="font-size:11px;color:#2d7a34;text-transform:uppercase;letter-spacing:1px">Entrega</strong><br><br>${entregaTxt}</div><div class="footer">GEA-DENTAL · Insumos Dentales · +56 9 2718 8959 · Documento válido como cotización.</div><script>window.onload=()=>{window.print()}<\/script></body></html>`;
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cotizacion ${nro}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#1a1a1a;font-size:13px}.top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:3px solid #4aad52;margin-bottom:18px}.brand{font-size:24px;font-weight:900}.brand span{color:#4aad52}table{width:100%;border-collapse:collapse;margin-bottom:18px}thead tr{background:#1a1a1a}thead th{padding:9px 10px;color:#fff;font-size:11px;text-transform:uppercase;text-align:left}.totbox{display:flex;justify-content:flex-end;margin-bottom:18px}.tot{border:2px solid #4aad52;border-radius:8px;padding:14px 18px;min-width:250px}.tot-row{display:flex;justify-content:space-between;padding:5px 0;color:#555;font-size:13px}.tot-final{display:flex;justify-content:space-between;border-top:2px solid #4aad52;margin-top:8px;padding-top:8px;font-size:17px;font-weight:900;color:#2d7a34}.entrega{background:#f2fbf3;border:1.5px solid #c8e6cc;border-radius:8px;padding:14px 16px;margin-bottom:18px;font-size:12px;line-height:1.8}.footer{text-align:center;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:12px;margin-top:8px}@media print{body{padding:12px}}</style></head><body><div class="top"><div><div class="brand">GEA-<span>DENTAL</span></div><div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:3px">INSUMOS DENTALES</div><div style="font-size:11px;color:#888;margin-top:6px">+56 9 2718 8959</div></div><div style="text-align:right"><div style="font-size:11px;color:#888">COTIZACION</div><div style="font-size:20px;font-weight:900;color:#2d7a34">${nro}</div><div style="font-size:11px;color:#888">${fecha}</div></div></div><table><thead><tr><th>Producto</th><th style="text-align:center">Cant.</th><th style="text-align:right">P.Unit.</th><th style="text-align:right">Subtotal</th></tr></thead><tbody>${filas}</tbody></table><div class="totbox"><div class="tot"><div class="tot-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div><div class="tot-row"><span>Envío</span><span>${tipoEntrega==="envio"?fmt(COSTO_ENVIO):"Gratis"}</span></div>${descuentoHtml}${recargoHtml}<div class="tot-final"><span>TOTAL</span><span>${fmt(total)}</span></div>${notaRecargo}</div></div><div class="entrega"><strong style="font-size:11px;color:#2d7a34;text-transform:uppercase;letter-spacing:1px">Entrega</strong><br><br>${entregaTxt}</div><div class="footer">GEA-DENTAL · Insumos Dentales · +56 9 2718 8959 · Documento válido como cotización.</div><script>window.onload=()=>{window.print()}<\/script></body></html>`;
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
@@ -661,6 +668,7 @@ export default function App() {
                 <div style={{ background:C.white, borderRadius:12, padding:"16px 20px", marginBottom:16, boxShadow:"0 2px 10px rgba(0,0,0,0.07)", border:"1px solid "+C.border }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:14, color:C.textLight }}><span>Subtotal</span><span>{fmt(subtotal)}</span></div>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8, fontSize:14, color:tipoEntrega==="envio"?C.morado:C.verde }}><span>{tipoEntrega==="envio"?"🚚 Envío":"🏪 Retiro"}</span><span style={{fontWeight:700}}>{tipoEntrega==="envio"?fmt(COSTO_ENVIO):"Gratis"}</span></div>
+                  {pinOk&&montoDescuento>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:8,fontSize:14,color:"#27ae60"}}><span>🎁 Descuento ({descuentoPct}%)</span><span style={{fontWeight:700}}>−{fmt(montoDescuento)}</span></div>}
                   {pinOk&&montoRecargo>0&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:8,fontSize:14,color:"#e67e22"}}><span>💳 Recargo tarjeta ({recargoPct}%)</span><span style={{fontWeight:700}}>+{fmt(montoRecargo)}</span></div>}
 
                   {/* Panel Admin */}
@@ -679,8 +687,20 @@ export default function App() {
                       <div style={{background:"#fff8e6",border:"1.5px solid #f0c040",borderRadius:12,padding:14,display:"flex",flexDirection:"column",gap:12}}>
                         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                           <span style={{fontSize:13,fontWeight:800,color:"#7d5a00"}}>🔒 Panel Administrador</span>
-                          <button onClick={()=>{setPinOk(false);setMostrarRecargo(false);setRecargoPct("");setPinIngresado("");}} style={{background:"none",border:"none",cursor:"pointer",color:C.textLight,fontSize:20}}>×</button>
+                          <button onClick={()=>{setPinOk(false);setMostrarRecargo(false);setRecargoPct("");setDescuentoPct("");setPinIngresado("");}} style={{background:"none",border:"none",cursor:"pointer",color:C.textLight,fontSize:20}}>×</button>
                         </div>
+                        {/* Campo descuento */}
+                        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                          <span style={{fontSize:13,color:"#27ae60",fontWeight:600}}>🎁 Descuento:</span>
+                          <div style={{display:"flex",alignItems:"center",gap:6}}>
+                            <input type="number" min="0" max="100" step="0.5" value={descuentoPct} onChange={e=>setDescuentoPct(e.target.value)} placeholder="0"
+                              style={{width:60,padding:"6px 8px",borderRadius:7,border:"1.5px solid #27ae60",fontSize:14,textAlign:"center",fontFamily:"inherit",outline:"none",color:"#111",background:"white"}}/>
+                            <span style={{fontSize:14,fontWeight:700,color:"#27ae60"}}>%</span>
+                          </div>
+                          {descuentoPct&&parseFloat(descuentoPct)>0&&<span style={{fontSize:13,color:"#27ae60",fontWeight:700}}>− {fmt(montoDescuento)}</span>}
+                        </div>
+
+                        {/* Campo recargo tarjeta */}
                         <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
                           <span style={{fontSize:13,color:"#7d5a00",fontWeight:600}}>💳 Recargo tarjeta:</span>
                           <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -693,9 +713,10 @@ export default function App() {
                           <div style={{background:"white",borderRadius:8,padding:12,border:"1px solid #f0c040",fontSize:13}}>
                             <div style={{fontWeight:700,color:"#7d5a00",marginBottom:8,fontSize:12,textTransform:"uppercase",letterSpacing:1}}>📊 Desglose de cobro</div>
                             <div style={{display:"flex",justifyContent:"space-between",color:"#555",marginBottom:5}}><span>Subtotal</span><span>{fmt(subtotal)}</span></div>
+                            {montoDescuento>0&&<div style={{display:"flex",justifyContent:"space-between",color:"#27ae60",marginBottom:5}}><span>🎁 Descuento ({descuentoPct}%)</span><span style={{fontWeight:700}}>− {fmt(montoDescuento)}</span></div>}
                             {costoEnvio>0&&<div style={{display:"flex",justifyContent:"space-between",color:"#555",marginBottom:5}}><span>Envío</span><span>{fmt(costoEnvio)}</span></div>}
-                            <div style={{display:"flex",justifyContent:"space-between",color:"#e67e22",marginBottom:5,borderTop:"1px dashed #f0c040",paddingTop:6}}><span>Recargo tarjeta ({recargoPct}%)</span><span style={{fontWeight:700}}>+{fmt(montoRecargo)}</span></div>
-                            <div style={{display:"flex",justifyContent:"space-between",color:"#2d7a34",fontWeight:800,fontSize:15,borderTop:"2px solid #f0c040",paddingTop:8}}><span>Total con tarjeta</span><span>{fmt(total)}</span></div>
+                            {montoRecargo>0&&<div style={{display:"flex",justifyContent:"space-between",color:"#e67e22",marginBottom:5,borderTop:"1px dashed #f0c040",paddingTop:6}}><span>Recargo tarjeta ({recargoPct}%)</span><span style={{fontWeight:700}}>+{fmt(montoRecargo)}</span></div>}
+                            <div style={{display:"flex",justifyContent:"space-between",color:"#2d7a34",fontWeight:800,fontSize:15,borderTop:"2px solid #f0c040",paddingTop:8}}><span>Total final</span><span>{fmt(total)}</span></div>
                             <div style={{marginTop:8,padding:"6px 10px",background:"#fff3cd",borderRadius:6,fontSize:11,color:"#7d5a00"}}>ℹ️ Recargo del {recargoPct}% por comisión bancaria de tarjeta de crédito.</div>
                           </div>
                         )}
