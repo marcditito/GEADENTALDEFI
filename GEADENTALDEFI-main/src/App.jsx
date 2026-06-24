@@ -19,21 +19,24 @@ const PRODUCTOS = [
     variantes:[{formato:"1000g",precio:28000},{formato:"500g",precio:16990}]},
   { id:3, nombre:"Acrílico Autocurado", marca:"Veracril", categoria:"Acrílicos", esColor:true,
     colores:[
-      {color:"Transparente", variantes:[{formato:"1000g",precio:37500},{formato:"500g",precio:19000},{formato:"250g",precio:13500}]},
-      {color:"VR-1",         variantes:[{formato:"1000g",precio:37500},{formato:"500g",precio:19000},{formato:"250g",precio:13500}]},
+      {color:"Transparente", variantes:[{formato:"1000g",precio:37500},{formato:"500g",precio:19000},{formato:"250g",precio:13700}]},
+      {color:"VR-1",         variantes:[{formato:"1000g",precio:37500},{formato:"500g",precio:19000},{formato:"250g",precio:13700}]},
     ]},
   { id:6, nombre:"Acrílico Termocurado", marca:"Veracril", categoria:"Acrílicos", esColor:true,
     colores:[
-      {color:"Transparente", variantes:[{formato:"1000g",precio:36500},{formato:"500g",precio:19000},{formato:"250g",precio:13500}]},
-      {color:"VR-1",         variantes:[{formato:"1000g",precio:36500},{formato:"500g",precio:19000},{formato:"250g",precio:13500}]},
+      {color:"Transparente", variantes:[{formato:"1000g",precio:36500},{formato:"500g",precio:19000},{formato:"250g",precio:13700}]},
+      {color:"VR-1",         variantes:[{formato:"1000g",precio:36500},{formato:"500g",precio:19000},{formato:"250g",precio:13700}]},
     ]},
-  { id:9,  nombre:"Acrílico de Cubeta", marca:"Marche", categoria:"Acrílicos", variantes:[{formato:"250g",precio:8990}]},
-  { id:10, nombre:"Acrílico Corona Termocurado", marca:"Marche", categoria:"Acrílicos", variantes:[{formato:"20g",precio:1800}]},
-  { id:11, nombre:"Acrílico Corona Autocurado", marca:"Veracril", categoria:"Acrílicos", variantes:[{formato:"20g",precio:1800}]},
+  { id:9,  nombre:"Acrílico de Cubeta", marca:"Marche", categoria:"Acrílicos", variantes:[{formato:"250g",precio:10500}]},
+  { id:10, nombre:"Acrílico Corona", marca:"Marche", categoria:"Acrílicos", esColor:true,
+    colores:[
+      {color:"Termocurado", variantes:[{formato:"Color 41",precio:1800},{formato:"Color 42",precio:1800},{formato:"Color 43",precio:1800},{formato:"Color 44",precio:1800},{formato:"Color 46",precio:1800},{formato:"Color 47",precio:1800},{formato:"Color 49",precio:1800},{formato:"Color 50",precio:1800},{formato:"Color 58",precio:1800},{formato:"Color 59",precio:1800}]},
+      {color:"Autocurado",  variantes:[{formato:"Color 41",precio:1800},{formato:"Color 42",precio:1800},{formato:"Color 43",precio:1800},{formato:"Color 44",precio:1800},{formato:"Color 46",precio:1800},{formato:"Color 47",precio:1800},{formato:"Color 49",precio:1800},{formato:"Color 50",precio:1800},{formato:"Color 58",precio:1800},{formato:"Color 59",precio:1800}]},
+    ]},
   { id:12, nombre:"Yeso Tipo II (París)", marca:"Velmix", categoria:"Yesos", variantes:[{formato:"1kg",precio:3500}]},
   { id:13, nombre:"Yeso Tipo III (Piedra)", marca:"Durguix", categoria:"Yesos", variantes:[{formato:"1kg",precio:3000}]},
-  { id:53, nombre:"Yeso Extra Duro", marca:"-", categoria:"Yesos", variantes:[{formato:"1kg",precio:4990}]},
-  { id:14, nombre:"Alginato", marca:"Vigodent", categoria:"Yesos", variantes:[{formato:"454g",precio:6990}]},
+  { id:53, nombre:"Yeso Extra Duro", marca:"-", categoria:"Yesos", variantes:[{formato:"1kg",precio:5700}]},
+  { id:14, nombre:"Alginato", marca:"Vigodent", categoria:"Yesos", variantes:[{formato:"454g",precio:7200}]},
   { id:15, nombre:"Monómero", marca:"Veracril", categoria:"Monómeros", esColor:true,
     colores:[
       {color:"Termocurado", variantes:[{formato:"1L",precio:35000},{formato:"500ml",precio:17800},{formato:"250ml",precio:9990}]},
@@ -42,41 +45,62 @@ const PRODUCTOS = [
   { id:18, nombre:"Monómero Termocurado", marca:"Marche", categoria:"Monómeros", variantes:[{formato:"75cc",precio:3750},{formato:"210cc",precio:7990}]},
   { id:20, nombre:"Monómero Autocurado", marca:"Marche", categoria:"Monómeros", variantes:[{formato:"75cc",precio:4500},{formato:"210cc",precio:8990}]},
   { id:22, nombre:"Vaso Dappen", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:800}]},
-  { id:23, nombre:"Vaso Dappen Silicona", marca:"-", categoria:"Instrumentos", variantes:[{formato:"Grande",precio:2800},{formato:"Mediano",precio:2100}]},
-  { id:24, nombre:"Espátula de Alginato", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:650}]},
+  { id:23, nombre:"Vaso Dappen Silicona", marca:"-", categoria:"Instrumentos", variantes:[{formato:"Grande",precio:2400},{formato:"Mediano",precio:1900}]},
+  { id:24, nombre:"Espátula de Alginato", marca:"-", categoria:"Instrumentos", variantes:[{formato:"Azul",precio:1000},{formato:"Blanca",precio:1000},{formato:"Celeste",precio:1000}]},
   { id:25, nombre:"Espátula de Cemento", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:1800}]},
   { id:26, nombre:"Espátula de Lecron", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:1500}]},
-  { id:27, nombre:"Espátula de Yeso", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:1990}]},
-  { id:28, nombre:"Taza de Goma Grande", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:3000}]},
+  { id:27, nombre:"Espátula de Yeso", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:2100}]},
+  { id:28, nombre:"Taza de Goma Grande", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:2100}]},
   { id:29, nombre:"Cuchillo de Yeso", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:2500}]},
   { id:30, nombre:"Cizalla de Yeso", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:10500}]},
   { id:46, nombre:"Oclusor", marca:"-", categoria:"Instrumentos", variantes:[{formato:"Talla M",precio:4500},{formato:"Talla L",precio:5500}]},
   { id:31, nombre:"Láminas Protector Bucal", marca:"Bioart", categoria:"Materiales",
-    variantes:[{formato:"x unidad",precio:1800},{formato:"5u Verde",precio:7000},{formato:"5u Fucsia",precio:7000},{formato:"5u Surtido",precio:7000}]},
+    variantes:[{formato:"Surtido",precio:7000},{formato:"Fucsia",precio:7000},{formato:"Azul",precio:7000},{formato:"Verde",precio:7000},{formato:"Negro",precio:7000}]},
   { id:33, nombre:"Laca Base", marca:"-", categoria:"Materiales", variantes:[{formato:"x unidad",precio:600},{formato:"100 unidades",precio:51200}]},
   { id:35, nombre:"Caja Cera Rosada", marca:"Blasdent", categoria:"Materiales", variantes:[{formato:"x unidad",precio:5800}]},
   { id:48, nombre:"Caja Cera Rosada", marca:"Michydent", categoria:"Materiales", variantes:[{formato:"x unidad",precio:5900}]},
   { id:36, nombre:"Rodetes", marca:"-", categoria:"Materiales", variantes:[{formato:"x unidad",precio:400},{formato:"10 unidades",precio:3000},{formato:"50 unidades",precio:10000}]},
   { id:38, nombre:"Zocaleras", marca:"-", categoria:"Materiales", variantes:[{formato:"x unidad",precio:6600}]},
   { id:39, nombre:"Alambre", marca:"Morelli", categoria:"Materiales",
-    variantes:[{formato:"0.6mm/metro",precio:700},{formato:"0.6mm/rollo",precio:8990},{formato:"0.7mm/metro",precio:850},{formato:"0.8mm/metro",precio:1100},{formato:"0.8mm/rollo",precio:8990}]},
-  { id:42, nombre:"Cera para Tallado 15g", marca:"Michydent", categoria:"Materiales",
-    variantes:[{formato:"Marfil",precio:3500},{formato:"Azul",precio:3500},{formato:"Amarilla",precio:3500},{formato:"Roja",precio:3500}]},
+    variantes:[{formato:"0.6mm/metro",precio:700},{formato:"0.6mm/rollo",precio:9500},{formato:"0.7mm/metro",precio:850},{formato:"0.8mm/metro",precio:1100},{formato:"0.8mm/rollo",precio:9500}]},
+  { id:42, nombre:"Cera para Tallado", marca:"Michydent", categoria:"Materiales", esColor:true,
+    colores:[
+      {color:"Rojo",     variantes:[{formato:"15g",precio:3500},{formato:"70g",precio:3500}]},
+      {color:"Azul",     variantes:[{formato:"15g",precio:3500},{formato:"70g",precio:3500}]},
+      {color:"Amarillo", variantes:[{formato:"15g",precio:3500},{formato:"70g",precio:3500}]},
+      {color:"Marfil",   variantes:[{formato:"15g",precio:3500},{formato:"70g",precio:3500}]},
+    ]},
   { id:43, nombre:"Kit PKT", marca:"-", categoria:"Materiales", variantes:[{formato:"5 unidades",precio:7000}]},
   { id:54, nombre:"Polycril", marca:"-", categoria:"Materiales", variantes:[{formato:"454g",precio:5990}]},
   { id:55, nombre:"Pimpollo Silicona", marca:"-", categoria:"Materiales",
     variantes:[{formato:"Amarillo",precio:1350},{formato:"Verde",precio:1350},{formato:"Gris",precio:1350}]},
-  { id:56, nombre:"Material Flexible", marca:"-", categoria:"Materiales", variantes:[{formato:"1kg",precio:24990}]},
+  { id:56, nombre:"Material Flexible", marca:"-", categoria:"Materiales", variantes:[{formato:"1kg",precio:29900}]},
   { id:57, nombre:"Porta Prótesis", marca:"-", categoria:"Materiales", variantes:[{formato:"x unidad",precio:850},{formato:"10 unidades",precio:8000}]},
   { id:49, nombre:"Dientes de Acrílico", marca:"Michydent", categoria:"Dientes", variantes:[{formato:"x unidad",precio:1600}], esDiente:true},
   { id:44, nombre:"Láminas Rígidas 1.5mm", marca:"Bioart", categoria:"Láminas", variantes:[{formato:"5 unidades",precio:5990}]},
-  { id:45, nombre:"Láminas Rígidas 1.5mm", marca:"Ehros", categoria:"Láminas", variantes:[{formato:"15 unidades",precio:19000}]},
+  { id:45, nombre:"Láminas Rígidas", marca:"Ehros", categoria:"Láminas", variantes:[{formato:"1.5mm · 15 láminas",precio:19000},{formato:"2.0mm · 10 láminas",precio:19000},{formato:"3.0mm · 7 láminas",precio:19000}]},
   { id:58, nombre:"Caja de Ortodoncia", marca:"-", categoria:"Materiales", variantes:[{formato:"10 unidades",precio:5500}]},
   // ── Endodoncia ──
   { id:59, nombre:"Lima K", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:4790}]},
   { id:60, nombre:"Cono Gutta", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:3490}]},
   { id:61, nombre:"Cemento", marca:"-", categoria:"Endodoncia", variantes:[{formato:"x unidad",precio:54900}]},
-  { id:50, nombre:"Soldadura Dental", marca:"Morelli", categoria:"Soldadura", variantes:[{formato:"5 metros",precio:42000},{formato:"4 varillas",precio:30000}]},
+  // ── Productos nuevos ──
+  { id:62, nombre:"Laca Fotocurado", marca:"-", categoria:"Materiales", variantes:[{formato:"x unidad",precio:78990}]},
+  { id:63, nombre:"Cera Preformada", marca:"Morelli", categoria:"Materiales",
+    variantes:[{formato:"Molares",precio:8990},{formato:"Premolares",precio:7990},{formato:"Roach",precio:7990}]},
+  { id:64, nombre:"Cera Rejilla", marca:"-", categoria:"Materiales", variantes:[{formato:"Cuadrada",precio:7990},{formato:"Redonda",precio:7990}]},
+  { id:65, nombre:"Crisol", marca:"-", categoria:"Instrumentos", variantes:[{formato:"x unidad",precio:8990}]},
+  { id:66, nombre:"Anillo Metálico", marca:"-", categoria:"Instrumentos",
+    variantes:[{formato:"Talla S",precio:6650},{formato:"Talla M",precio:6990},{formato:"Talla L",precio:7890}]},
+  { id:67, nombre:"Acrílico de Ortodoncia", marca:"O-Cryl", categoria:"Acrílicos",
+    variantes:[{formato:"Amarillo · 60g",precio:8990},{formato:"Azul · 60g",precio:8990},{formato:"Rosado · 60g",precio:8990}]},
+  { id:68, nombre:"Monómero de Ortodoncia", marca:"O-Cryl", categoria:"Monómeros", variantes:[{formato:"55ml",precio:7990}]},
+  { id:70, nombre:"Pasta para Soldar", marca:"-", categoria:"Soldadura", variantes:[{formato:"15g",precio:2500}]},
+  { id:71, nombre:"Monómero Ortodent", marca:"Evodent", categoria:"Monómeros", variantes:[{formato:"50ml · Autocurado Transparente",precio:4800}]},
+  { id:72, nombre:"Acrílico Ortodont", marca:"Evodent", categoria:"Acrílicos",
+    variantes:[{formato:"50g · Verde Limón",precio:8500},{formato:"50g · Rosado",precio:8500},{formato:"50g · Morado",precio:8500},{formato:"50g · Verde",precio:8500},{formato:"50g · Transparente",precio:8500}]},
+  { id:69, nombre:"Cartucho para Prótesis Flexible", marca:"Forflex", categoria:"Materiales", variantes:[{formato:"Diámetro 7.000",precio:7000}]},
+  { id:50, nombre:"Soldadura Dental", marca:"Morelli", categoria:"Soldadura", variantes:[{formato:"3 metros",precio:17000},{formato:"5 metros",precio:42000},{formato:"4 varillas",precio:30000}]},
 ];
 
 // ─────────────────────────────────────────────
@@ -353,6 +377,133 @@ const ColorVarianteCard = ({ producto, carrito, onAgregar, C, fmt }) => {
 //   4) Cantidad
 // Valida que se seleccionen las 3 opciones antes de agregar.
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// FORMULARIO DE PRODUCTO (panel administrador)
+// Permite crear o editar un producto con variantes simples
+// (nombre, marca, categoría + lista de formato/precio).
+// No soporta productos con "esColor" ni "esDiente" — esos
+// se mantienen editables solo desde el código por su complejidad.
+// ─────────────────────────────────────────────
+const ProductoForm = ({ producto, categoriasExistentes, onGuardar, onCancelar, C }) => {
+  const esEdicion = !!producto;
+  const [nombre, setNombre] = React.useState(producto?.nombre || "");
+  const [marca, setMarca] = React.useState(producto?.marca && producto.marca!=="-" ? producto.marca : "");
+  const [categoria, setCategoria] = React.useState(producto?.categoria || categoriasExistentes[0] || "Materiales");
+  const [categoriaNueva, setCategoriaNueva] = React.useState("");
+  const [usarCategoriaNueva, setUsarCategoriaNueva] = React.useState(false);
+  const [variantes, setVariantes] = React.useState(
+    producto && !producto.esColor && !producto.esDiente
+      ? producto.variantes.map(v => ({ formato: v.formato, precio: String(v.precio) }))
+      : [{ formato: "x unidad", precio: "" }]
+  );
+  const [error, setError] = React.useState("");
+
+  // Si el producto es de tipo especial (color/diente), avisamos que no se puede editar aquí
+  const noEditable = producto && (producto.esColor || producto.esDiente);
+
+  const actualizarVariante = (idx, campo, valor) => {
+    setVariantes(prev => prev.map((v,i) => i===idx ? {...v,[campo]:valor} : v));
+  };
+  const agregarVariante = () => setVariantes(prev => [...prev, { formato:"", precio:"" }]);
+  const quitarVariante = (idx) => setVariantes(prev => prev.length>1 ? prev.filter((_,i)=>i!==idx) : prev);
+
+  const handleGuardar = () => {
+    const catFinal = usarCategoriaNueva ? categoriaNueva.trim() : categoria;
+    if (!nombre.trim()) { setError("El nombre es obligatorio"); return; }
+    if (!catFinal) { setError("La categoría es obligatoria"); return; }
+    const variantesValidas = variantes.filter(v => v.formato.trim() && v.precio && !isNaN(parseFloat(v.precio)));
+    if (variantesValidas.length === 0) { setError("Agrega al menos un formato con precio válido"); return; }
+    setError("");
+
+    const nuevoProducto = {
+      id: esEdicion ? producto.id : Date.now(),
+      nombre: nombre.trim(),
+      marca: marca.trim() || "-",
+      categoria: catFinal,
+      variantes: variantesValidas.map(v => ({ formato: v.formato.trim(), precio: Math.round(parseFloat(v.precio)) })),
+    };
+    onGuardar(nuevoProducto);
+  };
+
+  const inputStyle = { width:"100%", padding:"10px 12px", borderRadius:8, border:"2px solid "+C.border, fontSize:14, fontFamily:"inherit", color:"#111", background:"white", outline:"none", boxSizing:"border-box" };
+  const labelStyle = { fontSize:13, fontWeight:700, color:C.negroMedio, marginBottom:4, display:"block" };
+
+  if (noEditable) {
+    return (
+      <div style={{ background:"#fff8e6", border:"1.5px solid #f0c040", borderRadius:12, padding:20, textAlign:"center" }}>
+        <div style={{ fontSize:32, marginBottom:8 }}>⚠️</div>
+        <div style={{ fontWeight:700, color:"#7d5a00", marginBottom:8 }}>Este producto tiene formato especial</div>
+        <p style={{ fontSize:13, color:"#7d5a00", marginBottom:16 }}>
+          Los productos con selector de tipo (color) o el selector de dientes
+          tienen una estructura más compleja y se editan directamente desde el código
+          para evitar errores. Puedes eliminarlo y crear uno simple si lo necesitas.
+        </p>
+        <button onClick={onCancelar} style={{ background:C.morado, color:"white", border:"none", borderRadius:8, padding:"10px 20px", cursor:"pointer", fontFamily:"inherit", fontWeight:700 }}>Volver</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ background:C.white, borderRadius:12, padding:20, border:"1px solid "+C.border, boxShadow:"0 2px 14px rgba(0,0,0,0.07)" }}>
+      <h3 style={{ margin:"0 0 16px", fontSize:17, color:C.text }}>{esEdicion ? "✏️ Editar producto" : "➕ Nuevo producto"}</h3>
+
+      <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div>
+          <label style={labelStyle}>Nombre del producto *</label>
+          <input value={nombre} onChange={e=>setNombre(e.target.value)} placeholder="Ej: Espátula de cera" style={inputStyle} />
+        </div>
+
+        <div>
+          <label style={labelStyle}>Marca <span style={{fontWeight:400,color:C.textLight}}>(opcional)</span></label>
+          <input value={marca} onChange={e=>setMarca(e.target.value)} placeholder="Ej: Veracril" style={inputStyle} />
+        </div>
+
+        <div>
+          <label style={labelStyle}>Categoría *</label>
+          {!usarCategoriaNueva ? (
+            <div style={{ display:"flex", gap:8 }}>
+              <select value={categoria} onChange={e=>setCategoria(e.target.value)} style={{...inputStyle, cursor:"pointer"}}>
+                {categoriasExistentes.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <button onClick={()=>setUsarCategoriaNueva(true)} style={{ padding:"0 14px", borderRadius:8, border:"2px solid "+C.border, background:C.verdePale, color:C.verdeOsc, fontSize:13, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap" }}>+ Nueva</button>
+            </div>
+          ) : (
+            <div style={{ display:"flex", gap:8 }}>
+              <input value={categoriaNueva} onChange={e=>setCategoriaNueva(e.target.value)} placeholder="Nombre de la nueva categoría" style={inputStyle} />
+              <button onClick={()=>setUsarCategoriaNueva(false)} style={{ padding:"0 14px", borderRadius:8, border:"2px solid "+C.border, background:"#fff0f0", color:"#e74c3c", fontSize:13, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap" }}>Cancelar</button>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <label style={labelStyle}>Formatos y precios *</label>
+          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {variantes.map((v, idx) => (
+              <div key={idx} style={{ display:"flex", gap:8, alignItems:"center" }}>
+                <input value={v.formato} onChange={e=>actualizarVariante(idx,"formato",e.target.value)} placeholder="Formato (ej: 500g)" style={{...inputStyle, flex:2}} />
+                <input value={v.precio} onChange={e=>actualizarVariante(idx,"precio",e.target.value.replace(/[^0-9]/g,""))} placeholder="Precio" inputMode="numeric" style={{...inputStyle, flex:1}} />
+                {variantes.length > 1 && (
+                  <button onClick={()=>quitarVariante(idx)} style={{ background:"#fff0f0", border:"none", borderRadius:7, width:36, height:36, color:"#e74c3c", fontSize:16, cursor:"pointer", flexShrink:0 }}>×</button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button onClick={agregarVariante} style={{ marginTop:8, background:"none", border:"1.5px dashed "+C.border, borderRadius:8, padding:"8px 12px", color:C.textLight, fontSize:13, cursor:"pointer", fontFamily:"inherit", width:"100%" }}>+ Agregar otro formato</button>
+        </div>
+
+        {error && <div style={{ color:"#e74c3c", fontSize:13, fontWeight:600 }}>⚠ {error}</div>}
+
+        <div style={{ display:"flex", gap:10, marginTop:6 }}>
+          <button onClick={onCancelar} style={{ flex:1, padding:12, background:"none", border:"2px solid "+C.border, borderRadius:10, color:C.textLight, fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>Cancelar</button>
+          <button onClick={handleGuardar} style={{ flex:2, padding:12, background:C.verde, border:"none", borderRadius:10, color:"white", fontSize:14, fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+            {esEdicion ? "Guardar cambios" : "Crear producto"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const DienteCard = ({ producto, onAgregar, C, fmt }) => {
   const [tipo, setTipo] = React.useState("");
   const [modelo, setModelo] = React.useState("");
@@ -432,15 +583,59 @@ export default function App() {
   const [descuentoPct, setDescuentoPct] = useState("");
   const PIN = "1515";
 
+  // ── Gestión de productos (panel admin) ──
+  const [productos, setProductos] = useState(PRODUCTOS);
+  const [vistaAdmin, setVistaAdmin] = useState("ninguna"); // "ninguna" | "lista" | "form"
+  const [productoEditando, setProductoEditando] = useState(null);
+  const [cargandoStorage, setCargandoStorage] = useState(true);
+  const [confirmandoEliminar, setConfirmandoEliminar] = useState(null); // guarda el id del producto a confirmar
+
+  // Cargar productos guardados al iniciar (si existen)
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const r = await window.storage.get("gd-productos");
+        if (r && r.value) setProductos(JSON.parse(r.value));
+      } catch (e) { /* no hay datos guardados aún, usa los por defecto */ }
+      setCargandoStorage(false);
+    })();
+  }, []);
+
+  // Guardar productos cada vez que cambian (después de cargar)
+  React.useEffect(() => {
+    if (cargandoStorage) return;
+    window.storage.set("gd-productos", JSON.stringify(productos)).catch(()=>{});
+  }, [productos, cargandoStorage]);
+
+  // guardarProducto: agrega un producto nuevo o actualiza uno existente
+  const guardarProducto = (prod) => {
+    setProductos(prev => {
+      const existe = prev.some(p => p.id === prod.id);
+      return existe ? prev.map(p => p.id === prod.id ? prod : p) : [...prev, prod];
+    });
+    setVistaAdmin("lista");
+    setProductoEditando(null);
+  };
+
+  // eliminarProducto: quita un producto del catálogo
+  const eliminarProducto = (id) => {
+    setProductos(prev => prev.filter(p => p.id !== id));
+    setConfirmandoEliminar(null);
+  };
+
   // normalizar: elimina tildes y mayúsculas para búsqueda flexible.
   // Ej: "espátula" y "espatula" encuentran lo mismo.
   const normalizar = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+  // categoriasDinamicas: lista de categorías recalculada cada vez que
+  // se agregan/eliminan productos desde el panel admin.
+  const categoriasDinamicas = useMemo(() => ["Todas", ...new Set(productos.map(p => p.categoria))], [productos]);
 
   // productosFiltrados: filtra y ordena los productos según
   // la categoría activa, el texto de búsqueda y el orden elegido.
   const productosFiltrados = useMemo(() => {
     const q = normalizar(busqueda);
-    let lista = PRODUCTOS.filter(p => {
+    let lista = productos.filter(p => {
       const enCat = categoriaActiva==="Todas" || p.categoria===categoriaActiva;
       const enBusq = normalizar(p.nombre).includes(q) || normalizar(p.marca).includes(q) || normalizar(p.categoria).includes(q);
       return enCat && enBusq;
@@ -589,7 +784,68 @@ export default function App() {
 
         <main style={{ maxWidth:1100, margin:"0 auto", padding:"24px 16px" }}>
 
-          {vista==="carrito" ? (
+          {vista==="admin-productos" ? (
+            /* ══════════════════════════════════════════════════
+               VISTA: GESTIÓN DE PRODUCTOS (solo administrador)
+               Permite agregar, editar y eliminar productos del
+               catálogo sin tocar código. Se guarda en window.storage.
+               ══════════════════════════════════════════════════ */
+            <div className="slide-down">
+              <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:24, flexWrap:"wrap" }}>
+                <button onClick={()=>{setVista("carrito");setVistaAdmin("ninguna");setProductoEditando(null);}} style={{ background:"none", border:"2px solid "+C.morado, borderRadius:8, padding:"8px 16px", cursor:"pointer", fontFamily:"inherit", fontSize:14, color:C.morado, fontWeight:700 }}>← Volver</button>
+                <h2 style={{ margin:0, fontSize:22, color:C.negroMedio }}>📦 Gestión de Productos</h2>
+              </div>
+
+              {vistaAdmin === "lista" && (
+                <>
+                  <button onClick={()=>{setProductoEditando(null);setVistaAdmin("form");}} className="btn-press" style={{
+                    width:"100%", padding:14, marginBottom:16, background:C.verde, color:"white",
+                    border:"none", borderRadius:10, fontSize:15, fontWeight:700, cursor:"pointer",
+                    fontFamily:"inherit", display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+                  }}>
+                    ➕ Agregar producto nuevo
+                  </button>
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                    {productos.map(p => (
+                      <div key={p.id} style={{ background:C.white, borderRadius:10, padding:"12px 16px", display:"flex", justifyContent:"space-between", alignItems:"center", border:"1px solid "+C.border, gap:10, flexWrap:"wrap" }}>
+                        <div style={{ flex:1, minWidth:160 }}>
+                          <div style={{ fontWeight:700, fontSize:14 }}>{p.nombre}</div>
+                          <div style={{ fontSize:12, color:C.textLight }}>
+                            {p.marca && p.marca!=="-" ? p.marca+" · " : ""}{p.categoria}
+                            {p.esColor ? " · "+p.colores.length+" tipo(s)" : " · "+p.variantes.length+" formato(s)"}
+                          </div>
+                        </div>
+                        {confirmandoEliminar === p.id ? (
+                          <div style={{ display:"flex", gap:6, alignItems:"center", background:"#fff0f0", padding:"4px 8px", borderRadius:8, border:"1.5px solid #e74c3c" }}>
+                            <span style={{ fontSize:12, color:"#e74c3c", fontWeight:700 }}>¿Eliminar?</span>
+                            <button onClick={()=>eliminarProducto(p.id)} style={{ background:"#e74c3c", color:"white", border:"none", borderRadius:6, padding:"5px 10px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:"inherit" }}>Sí</button>
+                            <button onClick={()=>setConfirmandoEliminar(null)} style={{ background:"white", color:"#555", border:"1px solid #ddd", borderRadius:6, padding:"5px 10px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:"inherit" }}>No</button>
+                          </div>
+                        ) : (
+                          <div style={{ display:"flex", gap:6 }}>
+                            <button onClick={()=>{setProductoEditando(p);setVistaAdmin("form");}} style={{ background:C.moradoPale, color:C.morado, border:"none", borderRadius:7, padding:"7px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:"inherit" }}>✏️ Editar</button>
+                            <button onClick={()=>setConfirmandoEliminar(p.id)} style={{ background:"#fff0f0", color:"#e74c3c", border:"none", borderRadius:7, padding:"7px 12px", cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:"inherit" }}>🗑️</button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {vistaAdmin === "form" && (
+                <ProductoForm
+                  producto={productoEditando}
+                  categoriasExistentes={categoriasDinamicas.filter(c=>c!=="Todas")}
+                  onGuardar={guardarProducto}
+                  onCancelar={()=>{setVistaAdmin("lista");setProductoEditando(null);}}
+                  C={C}
+                />
+              )}
+            </div>
+
+          ) : vista==="carrito" ? (
             <div>
               <div className="slide-down" style={{ display:"flex", alignItems:"center", gap:16, marginBottom:24 }}>
                 <button onClick={()=>setVista("catalogo")} style={{ background:"none", border:"2px solid "+C.verde, borderRadius:8, padding:"8px 16px", cursor:"pointer", fontFamily:"inherit", fontSize:14, color:C.verde, fontWeight:700 }}>← Volver</button>
@@ -720,6 +976,15 @@ export default function App() {
                             <div style={{marginTop:8,padding:"6px 10px",background:"#fff3cd",borderRadius:6,fontSize:11,color:"#7d5a00"}}>ℹ️ Recargo del {recargoPct}% por comisión bancaria de tarjeta de crédito.</div>
                           </div>
                         )}
+
+                        {/* Botón para ir a gestión de productos */}
+                        <button onClick={()=>{setVista("admin-productos");setVistaAdmin("lista");}} style={{
+                          background:C.morado, color:"white", border:"none", borderRadius:8,
+                          padding:"10px", cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:700,
+                          display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+                        }}>
+                          📦 Gestionar Productos ({productos.length})
+                        </button>
                       </div>
                     )}
                   </div>
@@ -748,7 +1013,7 @@ export default function App() {
               <input value={busqueda} onChange={e=>setBusqueda(e.target.value)} placeholder="🔍 Buscar producto o marca..."
                 style={{width:"100%",padding:"13px 18px",borderRadius:10,border:"2px solid "+C.border,fontSize:15,fontFamily:"inherit",background:C.white,outline:"none",boxSizing:"border-box",marginBottom:16,color:C.text}}/>
               <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14}}>
-                {CATEGORIAS.map(cat=>(
+                {categoriasDinamicas.map(cat=>(
                   <button key={cat} onClick={()=>setCategoriaActiva(cat)} style={{padding:"7px 15px",borderRadius:20,border:"2px solid "+(categoriaActiva===cat?C.verdeOsc:C.border),background:categoriaActiva===cat?C.verdeOsc:"rgba(255,255,255,0.85)",color:categoriaActiva===cat?"white":C.textLight,cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:600}}>{cat}</button>
                 ))}
               </div>
